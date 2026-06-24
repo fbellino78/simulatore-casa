@@ -512,8 +512,14 @@ Inserisci dati • Controlla risultato • Simula scenari
   </div>
 </td>
 
-<td class="note">← Indica valore Mutuo (Default = 80% prezzo concordato)</td>
+<td class="note">
+← Indica valore Mutuo (Default = 80% prezzo concordato)<br>
+<span style="margin-left:13px;">
+ℹ️ Importi inferiori a 50.000 € possono risultare difficili da ottenere o economicamente poco convenienti
+</span>
+</td>
 </tr>
+
 
 <tr>
 <td>Anni Mutuo</td>
@@ -589,8 +595,14 @@ Inserisci dati • Controlla risultato • Simula scenari
     <span class="mini-reset" onclick="resetUscite()">↺</span>
   </div>
 </td>
-<td class="note">← Indica Uscite mensili medie</td>
+<td class="note">
+← Indica Uscite mensili medie<br>
+<span style="margin-left:13px;">
+ℹ️ le banche possono applicare criteri più prudenziali basati su nucleo familiare e impegni finanziari
+</span>
+</td>
 </tr>
+
 
 
 <!-- INPUT SECONDARI -->
@@ -996,6 +1008,8 @@ function calcola(){
     let p = num("prezzo");
 
     let m = num("mutuo");
+
+
 
     // ✅ BLOCCO MUTUO > PREZZO
     if(m > p){
