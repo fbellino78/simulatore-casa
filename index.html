@@ -1,0 +1,1965 @@
+<!DOCTYPE html>
+<html lang="it">
+<script 
+src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js">
+</script>
+<head>
+<meta charset="UTF-8">
+<title>Simulatore Acquisto Casa</title>
+
+<style>
+body{
+    font-family: 'Segoe UI', Tahoma, sans-serif;
+    background:#dfe6eb;
+}
+table{border-collapse:collapse;width:100%}
+td,th{border:1px solid #000;padding:4px;font-size:13px}
+
+
+.mini-reset {
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.output-box {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+
+.arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    margin: 0 4px;
+}
+
+.container{
+    width:95%;
+    max-width:1600px;
+    margin:30px auto;
+    border-radius:8px;   /* 👈 arrotondato */
+    background:#ffffff;
+    padding:20px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.15);
+}
+
+
+.section-start td{
+    border-top:3px solid #000;
+}
+
+table{
+    margin-bottom:0;
+    border-collapse:collapse;
+    width:100%;
+    border:3px solid #000;   /* ✅ bordo esterno */
+}
+
+
+.version-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:10px;
+    font-size:12px;
+    color:#333;
+}
+
+.header{
+    background:#cfcfcf;
+    color:#000;
+    font-weight:bold;
+    text-align:center;
+    font-size:14px;
+}
+
+.input{
+   background:#dbeafe;   /* ✅ azzurro più presente ma ancora elegante */
+    border:1px solid #93c5fd;
+}
+
+.locked{
+    background:transparent;
+    font-weight:normal;   /* ✅ niente grassetto */
+    text-align:left;      /* ✅ allineato a sinistra */
+}
+
+.note{
+    background:#f7f7f7;
+}
+
+/* colonna sinistra */
+.side{
+background:#cfcfcf;
+font-weight:bold;
+text-align:center;
+width:120px;
+}
+
+.green{
+    background:#e6f4ea;
+    border:1px solid #a3d9a5;
+    font-weight:bold;
+}
+
+.red{
+    background:#fff1f2;
+    border:1px solid #f5c2c7;
+    font-weight:bold;
+}
+
+.yellow{
+    background:#fff8e1;
+    border:1px solid #ffe58f;
+    font-weight:bold;
+}
+
+.footer{
+background:transparent;
+padding:0px;
+text-align:center;
+font-weight:bold;
+margin-top:8px
+}
+
+#rata, #perc, #margine{
+    font-weight:bold;
+    font-size:14px;
+}
+
+#esito1{
+    font-size:16px;
+    margin-top:0;
+    padding:6px;
+    border-radius:4px;
+    font-weight:bold;
+}
+
+#esito2{
+    margin-top:6px;
+    padding:6px;
+    border-radius:4px;
+    border:1px solid #ddd;
+    font-size:13px;
+    display:block;
+}
+
+.section-divider td{
+    border-top:3px solid #333;
+}
+
+input, select{
+    transition: border-color 0.2s ease;
+}
+
+input:hover, select:hover{
+    border-color:#6d9eeb;
+}
+
+#esito2{
+    white-space:pre-line;
+    margin-top:10px;
+    display:inline-block;
+    text-align:left;
+}
+ 
+.cta-box{
+    margin-top:15px;
+    padding:15px;
+    background:#eef4ff;
+    border:2px solid #6d9eeb;
+    border-radius:8px;
+    text-align:center;
+}
+
+.cta-text{
+    margin-bottom:10px;
+    font-size:13px;
+}
+
+.cta-button{
+    background:#28a745;   /* ✅ verde */
+    color:white;
+    border:none;
+    padding:12px 18px;
+    border-radius:6px;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:14px;
+}
+
+.cta-button:hover{
+    background:#4a7fd1;
+}
+
+
+``
+
+button{width:100%;padding:10px;margin-top:5px}
+
+button.active{
+background:#28a745;
+box-shadow:0 0 10px rgba(40,167,69,0.7);
+color:white;
+}
+
+#print-header{
+    display:none;
+}
+
+@media print {
+
+    body{
+        background:white;
+        zoom: 80%;
+    }
+
+    .container{
+        border:none;
+        box-shadow:none;
+        margin:0;
+        width:100%;
+        padding:0;
+    }
+
+    #print-header{
+        display:block;
+        text-align:center;
+        margin-bottom:10px;
+    }
+
+    #print-header h2{
+        margin:0;
+    }
+
+    table{
+        page-break-inside: avoid;
+    }
+
+    tr{
+        page-break-inside: avoid;
+    }
+
+    button{
+        display:none;
+    }
+
+    .version-bar{
+        margin-top:10px;
+        border-top:1px solid #000;
+        padding-top:5px;
+    }
+
+    .input, .note{
+        background:white;
+    }
+
+    .green{background:#c6efce !important;}
+    .yellow{background:#fff2cc !important;}
+    .red{
+    background:#fff1f2;
+    font-weight:bold;
+}
+
+}
+
+.button-bar{
+    display:flex;
+    justify-content:center;   /* ✅ centrati */
+    gap:10px;                 /* ✅ spazio tra bottoni */
+    margin-top:15px;
+}
+
+
+.button-bar button{
+    padding:10px 16px;
+    font-size:13px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+
+    box-shadow:0 4px 8px rgba(0,0,0,0.3);  /* ✅ QUI */
+}
+
+
+.disclaimer{
+    margin-top:8px;
+    font-size:11px;
+    color:#666;
+    text-align:center;
+    line-height:1.3;
+}
+
+.mini-reset{
+    cursor:pointer;
+    font-size:14px;
+    padding:2px 6px;
+    border-radius:4px;
+    background:#eee;
+}
+
+.mini-reset:hover{
+    background:#ccc;
+}
+
+#semaforoBox{
+    width:40px;
+    background:#000;
+    padding:8px 6px;
+    border-radius:6px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:8px;
+}
+
+.lamp{
+    width:18px;
+    height:18px;
+    border-radius:50%;
+    background:#444;   /* spenta */
+}
+
+.lamp.red.active{
+    background:#dc3545;
+}
+
+.lamp.yellow.active{
+    background:#ffc107;
+}
+
+.lamp.green.active{
+    background:#28a745;
+}
+
+#percMutuo, #percAgenzia{
+	
+    width:70px;      /* ✅ larghezza uguale */
+    height:22px;     /* ✅ stessa altezza input */
+ 
+/* 🔥 uniforma con input */
+    border:1px solid #666;
+    background:white;
+    font-size:13px;
+
+    padding:0 4px;
+    box-sizing:border-box;
+}
+
+#percMutuo, #percAgenzia{
+    line-height:22px;
+}
+
+#tasso{
+    background-image:url("data:image/svg+xml;utf8,<svg fill='black' height='10' viewBox='0 0 20 20'><path d='M5 7l5 5 5-5z'/></svg>");
+    background-repeat:no-repeat;
+    background-position:right 8px center;
+    background-size:10px;
+}
+
+
+.input{
+    background:#dbeafe;
+    border:1px solid #000;   /* ✅ allineato alla tabella */
+}
+
+
+.output-green{
+    background:#e6f4ea;
+}
+
+.output-yellow{
+    background:#fff8e1;
+}
+
+.output-red{
+    background:#fff1f2;
+}
+
+.note-indent {
+    display:block;
+    padding-left:13px;
+}
+
+</style>
+</head>
+
+<body>
+<div class="container">
+
+<div id="print-header">
+    <h2>Simulazione Acquisto Casa</h2>
+    <div id="cliente-nome"></div>
+    <div id="data-simulazione"></div>
+</div>
+
+<table>
+
+<tr>
+<td colspan="3" class="header">
+SIMULATORE ACQUISTO CASA<br>
+Capisci subito se puoi permettertelo!
+</td>
+<td class="header">
+COME USARE IL SIMULATORE<br>
+Inserisci dati • Controlla risultato • Simula scenari
+</td>
+</tr>
+
+<tr style="background:#cfcfcf; color:#000;">
+<th class="side">CATEGORIA</th>
+<th style="text-align:left;">Valutazione Acquisto Casa</th>
+<th style="text-align:left;">Input</th>
+<th style="text-align:left;">Note</th>
+</tr>
+
+<!-- INPUT ESSENZIALI -->
+
+<tr class="section-start">
+<td class="side" rowspan="12">INPUT<br>ESSENZIALI</td>
+
+
+<td>Prezzo casa concordato</td>
+
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="prezzo" value="120000" style="flex:1;">
+    <span class="mini-reset" onclick="resetPrezzo()">↺</span>
+  </div>
+</td>
+
+<td class="note">← Inserisci prezzo casa</td>
+</tr>
+
+<tr>
+<td>Rendita catastale → Valore catastale</td>
+<td class="input">
+ <div style="display:flex; align-items:center;">
+    <input id="rendita" value="800" style="width:90px;">
+   <span class="mini-reset" onclick="resetRendita()">↺</span>
+       <span style="margin: 0 auto;">→</span>
+<input id="catastale" readonly 
+       style="width:120px; background:#eaeaea; margin-left:auto; margin-right:27px;">
+  </div>
+</td>
+<td class="note">
+← Indica Rendita catastale (Default coerente con ~60% prezzo casa)<br>
+<span style="margin-left:13px;">ℹ️ Il valore catastale è calcolato automaticamente</span>
+
+</td>
+
+<tr>
+<td>Prima casa</td>
+<td class="input"><select id="primacasa"style="width:96px;"><option>si</option><option>no</option></select></td>
+<td class="note">← Indica se acquisti cone agevolazioni prima casa</td>
+</tr>
+
+<tr>
+<td>Acquisto da costruttore</td>
+<td class="input">
+    <select id="costruttore" style="width:96px;">
+        <option value="no" selected>no</option>
+        <option value="si">si</option>
+    </select>
+</td>
+<td class="note">← Se acquisto da impresa costruttrice</td>
+</tr>
+
+<tr>
+<td>Agenzia</td>
+<td class="input"><select id="flagAgenzia" style="width:96px;"><option value="si">si</option><option value="no">no</option></select></td>
+<td class="note">← Indica se compri tramite agenzia</td>
+</tr>
+
+<tr>
+<td>Mutuo richiesto</td>
+
+<td class="input">
+  <div style="display:flex; align-items:center;">
+
+    <input id="mutuo" value="96000" style="width:90px;">
+
+    <span class="mini-reset" onclick="resetMutuo()">↺</span>
+
+         <span style="margin-left:auto;"></span>
+
+    <select id="percMutuo" style="margin-right:27px;">
+      <option value="">---</option>
+      <option value="0.5">50%</option>
+      <option value="0.6">60%</option>
+      <option value="0.7">70%</option>
+      <option value="0.8" selected>80%</option>
+      <option value="0.9">90%</option>
+      <option value="1">100%</option>
+    </select>
+
+  </div>
+</td>
+
+<td class="note">← Indica valore Mutuo (Default = 80% prezzo concordato)</td>
+</tr>
+
+<tr>
+<td>Anni Mutuo</td>
+
+<td class="input">
+<select id="anni">
+    <option>5</option>
+    <option>10</option>
+    <option>15</option>
+    <option selected>20</option>
+    <option>21</option>
+    <option>22</option>
+    <option>23</option> 
+    <option>24</option>
+    <option>25</option>
+    <option>26</option>
+    <option>27</option>
+    <option>28</option>
+    <option>29</option>
+    <option>30</option>
+</select>
+</td>
+
+<td class="note" id="anniNote">
+← Indica la durata del mutuo in anni (Default = 20, Max = 30)
+</td>
+
+
+<tr>
+<td>Tasso Mutuo (BCE/IRS/EURIBOR + Spread)</td>
+<td class="input">
+<div style="display:flex; align-items:center; gap:6px;">
+    <input id="tasso" list="tassiList" placeholder="3,5%" style="flex:1;">
+    <span class="mini-reset" onclick="resetTasso()">↺</span>
+  </div>
+<td class="note">← Indica tasso complessivo mutuo comprensivo di Spread Banca (Default 3,5%)</td>
+</tr>
+
+<tr>
+<td>Età contraente mutuo</td>
+<td class="input"><input id="eta" value="45" style="width:96px;"></td>
+<td class="note">← Età attuale</td>
+</tr>
+
+
+<tr>
+<td>Disponibilità Iniziale</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="liquidita" value="35000" style="flex:1;">
+    <span class="mini-reset" onclick="resetLiquidita()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica Liquidità economica iniziale</td>
+</tr>
+
+<tr>
+<td>Entrate mensili</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="entrate" value="3500" style="flex:1;">
+    <span class="mini-reset" onclick="resetEntrate()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica Entrate mensili medie</td>
+</tr>
+
+<tr>
+<td>Uscite mensili</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="uscite" value="2800" style="flex:1;">
+    <span class="mini-reset" onclick="resetUscite()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica Uscite mensili medie</td>
+</tr>
+
+
+<!-- INPUT SECONDARI -->
+<tr class="section-divider">
+<td class="side" rowspan="12">INPUT<br>SECONDARI</td>
+
+<tr class="section-divider">
+<td>Spese Perizia Banca</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="perizia" value="500" style="flex:1;">
+    <span class="mini-reset" onclick="resetPerizia()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica spese perizia banca (default = 500 €)</td>
+</tr>
+
+<tr>
+<td>Spese Istruttoria Banca</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="istruttoria" value="500" style="flex:1;">
+    <span class="mini-reset" onclick="resetIstruttoria()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica spese Istruttoria (default = 500 €)</td>
+</tr>
+
+<tr>
+<td>Spese assicurazione scoppio incendio mutuo</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="assicurazione" value="1000" style="flex:1;">
+    <span class="mini-reset" onclick="resetAssicurazione()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica spese assicurazione mutuo (default = 1.000 €)</td>
+</tr>
+
+<td>Ononario Notaio Compravendita</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="notaio1" style="flex:1;">
+    <span class="mini-reset" onclick="resetNotaio1()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica Preventivo Notaio (Default = 2% prezzo concordato)</td>
+</tr>
+
+<tr>
+<td>Spese catastali/Accessorie</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="speseCat" style="flex:1;">
+    <span class="mini-reset" onclick="resetSpeseCat()">↺</span>
+  </div>
+</td>
+
+<td class="note">← Indica imposte, visure e bolli (Default = 758 €)</td>
+</tr>
+
+<tr>
+<td>Onorario Notaio Mutuo</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="notaio2" style="flex:1;">
+    <span class="mini-reset" onclick="resetNotaio2()">↺</span>
+  </div>
+</td>
+
+<td class="note">← Indica Preventivo Notaio (Default = 2% mutuo concordato)</td>
+</tr>
+
+<tr>
+<td>Quota Agenzia (IVA inclusa)</td>
+<td class="input">
+  <div style="display:flex; align-items:center;">
+    <input id="agenzia" style="width:90px;">
+    <span class="mini-reset" onclick="resetAgenzia()">↺</span>
+    <span style="margin-left:auto;"></span>
+    <select id="percAgenzia" style="margin-right:27px;">
+      <option value="">---</option>
+      <option value="0.02">2%</option>
+      <option value="0.025">2,5%</option>
+      <option value="0.03">3%</option>
+      <option value="0.035" selected>3,5%</option>
+      <option value="0.04">4%</option>
+    </select>
+  </div>
+</td>
+<td class="note" id="agenziaNote">
+← Indica quota agenzia pattuita (Default = 3,5% prezzo concordato)
+</td>
+</tr>
+
+<tr>
+<td>Lavori/Arredamento (assunti entro 1 anno da atto)</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="arredo" style="flex:1;">
+    <span class="mini-reset" onclick="resetArredo()">↺</span>
+  </div>
+</td>
+<td class="note">← Indica quota che intendi destinare a lavori/arredamento (Default =3% prezzo concordato)</td>
+</tr>
+
+<tr>
+<td>Spese allacciamenti (Acqua/luce/gas)</td>
+<td class="input">
+  <div style="display:flex; align-items:center; gap:5px;">
+    <input id="allacciamento" style="flex:1;">
+    <span class="mini-reset" onclick="resetAllacciamento()">↺</span>
+  </div>
+</td>
+
+<td class="note">← Default = 150 €</td>
+</tr>
+
+<tr>
+<td>Imposte acquisto (Registro/IVA)</td>
+<td class="locked" id="registro"></td>
+<td class="note" id="registroNote"></td>
+</tr>
+
+<tr>
+<td>Imposta sostitutiva</td>
+<td class="locked" id="sostitutiva"></td>
+<td class="note" id="sostitutivaNote"></td>
+</tr>
+
+<!-- OUTPUT -->
+
+<tr class="section-start">
+<td class="side" rowspan="6">OUTPUT</td>
+
+<td>Rata Mutuo Mensile</td>
+<td id="rata"></td>
+<td id="rataNote"></td>
+</tr>
+
+
+<tr style="display:none;">
+<td>% Rata/Disponibile</td>
+<td id="perc"></td>
+<td id="percNote"></td>
+</tr>
+
+
+<tr>
+<td>€ residui mensili</td>
+<td id="margine"></td><td id="mTxt"></td>
+</tr>
+
+<tr>
+<td>Fattibilità all'atto</td>
+<td id="fatt"></td><td></td>
+</tr>
+
+<tr>
+<td>Sostenibilità dopo 1 anno</td>
+<td id="anno1"></td><td></td>
+</tr>
+
+</table>
+
+
+<div class="footer" style="display:flex; align-items:flex-start; gap:20px;">
+
+    <!-- ✅ SEMAFORO -->
+    <div id="semaforoBox">
+        <div id="semRed" class="lamp"></div>
+        <div id="semYellow" class="lamp"></div>
+        <div id="semGreen" class="lamp"></div>
+    </div>
+
+    <!-- ✅ ESITI -->
+    <div style="flex:1; text-align:left;">
+        <div id="esito1"></div>
+        <div id="esito2"></div>
+    </div>
+
+</div>
+
+
+<div class="button-bar">
+<button onclick="resetAuto()">↺ Ripristina</button>
+<button onclick="scaricaPDF()">💾 Salva PDF</button>
+</div>
+
+
+<div class="cta-box">
+
+<div class="cta-text">
+💡 Questa simulazione è indicativa.
+
+👉 Vuoi una valutazione professionale completa del tuo caso,
+con analisi reale di fattibilità e rischi?
+</div>
+
+<div style="display:flex; align-items:center; gap:10px; margin-top:10px; flex-wrap:wrap;">
+
+    <!-- ✅ campi -->
+    <input id="nome" placeholder="Nome" style="width:120px;">
+    <input id="cognome" placeholder="Cognome" style="width:120px;">
+    <input id="telefono" placeholder="Telefono" style="width:120px;">
+    <input id="emailContatto" placeholder="Email" style="width:180px;">
+
+    <!-- ✅ bottone -->
+    <button class="cta-button" onclick="contattami()">
+        Richiedi analisi del tuo caso
+    </button>
+
+<div style="margin-top:6px; font-size:11px; color:#555;">
+Riceverai informazioni su modalità e costi senza impegno
+</div>
+
+</div>
+
+</div>
+<div class="version-bar">
+    <div>Versione 2.0 Pro</div>
+    <div>giu-2026</div>
+    <div>© 2026 Realizzato da Fabio Bellino – Tutti i diritti riservati</div>
+
+<div class="disclaimer">
+⚠️ Il presente simulatore ha finalità esclusivamente informative e non costituisce consulenza finanziaria o vincolo contrattuale. I risultati sono stime indicative e non garantiscono l’approvazione del mutuo.
+<br> 
+⚠️ È vietata la copia, distribuzione o modifica del presente simulatore senza autorizzazione.
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+// ===== UTILITY =====
+
+
+function eur(n){
+
+    if(isNaN(n)) return "0 €";
+
+    let val = Math.round(Number(n)).toString();
+
+    // ✅ forza il punto migliaia SEMPRE
+    val = val.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+    return val + " €";
+}
+
+function num(id){
+    return Number(
+        document.getElementById(id).value
+            .replace(/\./g,"")
+            .replace(/€/g,"")
+            .replace(",",".")
+            .trim()
+    );
+}
+
+function formattaInput(el){
+
+    let valore = el.value
+        .replace(/\./g,"")
+        .replace(/€/g,"")
+        .trim();
+
+if(valore === "" || isNaN(valore)) return;
+
+    
+let numVal = Math.round(Number(valore)).toString();
+
+numVal = numVal.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+el.value = numVal + " €";
+
+}
+
+// ===== DEFAULT =====
+let overrideArredo=false;
+let overrideMutuo=false;
+let overrideNotaio1=false;
+let overrideNotaio2=false;
+let overrideAgenzia=false;
+let overrideAllacciamento=false;
+let overrideSpeseCat=false;
+let overrideRendita = false;
+
+arredo.addEventListener("input",()=>overrideArredo=true);
+mutuo.addEventListener("input", function(){
+
+    overrideMutuo = true;
+
+    let p = num("prezzo");
+    let m = num("mutuo");
+
+    if(p === 0) return;
+
+    let perc = m / p;
+
+    let select = document.getElementById("percMutuo");
+
+    // ✅ arrotonda a 1 decimale per sicurezza
+    perc = Math.round(perc * 10) / 10;
+
+    // ✅ valori disponibili
+    let valid = ["0.5","0.6","0.7","0.8","0.9","1"];
+
+    if(valid.includes(perc.toString())){
+        select.value = perc.toString();
+    }else{
+        select.value = ""; // --- se non combacia
+    }
+});
+notaio1.addEventListener("input",()=>overrideNotaio1=true);
+notaio2.addEventListener("input",()=>overrideNotaio2=true);
+allacciamento.addEventListener("input",()=>overrideAllacciamento=true)
+speseCat.addEventListener("input",()=>overrideSpeseCat=true);
+document.getElementById("rendita").addEventListener("input", () => {
+    overrideRendita = true;
+});
+agenzia.addEventListener("input", function(){
+
+    overrideAgenzia = true;
+
+    // ✅ FIX: forza Agenzia = SI
+    document.getElementById("flagAgenzia").value = "si";
+
+    let p = num("prezzo");
+    let a = num("agenzia");
+
+    if(p === 0) return;
+
+    let perc = a / p;
+
+    let select = document.getElementById("percAgenzia");
+
+    perc = Math.round(perc * 1000) / 1000;
+
+    let valid = ["0.02","0.025","0.03","0.035","0.04"];
+
+    if(valid.includes(perc.toString())){
+        select.value = perc.toString();
+    } else {
+        select.value = "";
+    }
+});
+
+function auto(){
+
+    let p = num("prezzo");
+
+  if(!overrideRendita){
+           let renditaDefault = (p * 0.6) / (1.05 * 110);
+          document.getElementById("rendita").value = Math.round(renditaDefault);
+           }
+
+  // ✅ MUTUO AUTOMATICO 80%
+    
+if(!overrideMutuo){
+    mutuo.value = Math.round(p * 0.8);
+    formattaInput(mutuo);   // ✅ SOLO QUI
+}
+
+    let m = num("mutuo");
+
+    if(!overrideNotaio1){
+    notaio1.value = eur(p * 0.02);
+    }
+
+ 
+     if(!overrideNotaio2){
+    notaio2.value = eur(m * 0.02);
+     }
+ 
+	if(!overrideAgenzia){
+   	 agenzia.value = (flagAgenzia.value==="no") ? "0 €" : eur(p * 0.035 * 1.22);
+	}
+
+    if(!overrideArredo){
+        arredo.value = eur(p * 0.03);
+    }
+ 
+    if(!overrideAllacciamento){
+               allacciamento.value = eur(150);
+          }
+ 
+    if(!overrideSpeseCat){
+             speseCat.value = eur(758);
+         }
+
+}
+
+// ===== CALCOLO =====
+function calcola(){
+
+    auto();
+
+    // ✅ CALCOLA SUBITO IL VALORE CATASTALE DA RENDITA
+    calcolaCatastale();
+
+    let p = num("prezzo");
+
+    let m = num("mutuo");
+
+    // ✅ BLOCCO MUTUO > PREZZO
+    if(m > p){
+
+        m = p;
+        mutuo.value = p;
+
+        formattaInput(mutuo);
+
+        overrideMutuo = true;
+    }
+
+    // ✅ ORA il catastale è corretto perché già calcolato sopra
+    let catast = num("catastale");
+
+    let prima = primacasa.value;
+    let costr = document.getElementById("costruttore").value;
+
+    let registroVal;
+    let sostitutivaVal;
+
+if(costr === "si"){
+
+    // ✅ IVA
+    if(prima === "si"){
+        registroVal = p * 0.04;   // 4%
+    } else {
+        registroVal = p * 0.10;   // 10%
+    }
+
+    sostitutivaVal = m * 0.0025; // rimane quella mutuo
+
+} else {
+
+    // ✅ regime normale
+    if(prima === "si"){
+        registroVal = catast * 0.02;
+        sostitutivaVal = m * 0.0025;
+    } else {
+        registroVal = catast * 0.09;
+        sostitutivaVal = m * 0.02;
+    }
+}
+
+// aggiorna UI
+
+document.getElementById("registro").innerHTML = eur(registroVal);
+let registroNote = document.getElementById("registroNote");
+
+if(costr === "si"){
+
+    if(prima === "si"){
+        registroNote.innerHTML = "→ IVA 4% (prima casa)";
+    } else {
+        registroNote.innerHTML = "→ IVA 10% (seconda casa)";
+    }
+
+} else {
+
+    if(prima === "si"){
+        registroNote.innerHTML = "→ Imposta di registro 2% (prima casa)";
+    } else {
+        registroNote.innerHTML = "→ Imposta di registro 9% (seconda casa)";
+    }
+
+}
+document.getElementById("sostitutiva").innerHTML = eur(sostitutivaVal);
+let sostitutivaNote = document.getElementById("sostitutivaNote");
+
+if(prima === "si"){
+    sostitutivaNote.innerHTML = "→ 0,25% (prima casa)";
+} else {
+    sostitutivaNote.innerHTML = "→ 2% (seconda casa)";
+}
+
+    let ent = num("entrate");
+    let usc = num("uscite");
+
+    let anniMutuo = num("anni");
+    let eta = Number(document.getElementById("eta").value)
+
+    let t = Number(
+        document.getElementById("tasso").value
+            .replace("%","")
+            .replace(",",".")
+    ) / 100 / 12;
+
+    let a = num("anni") * 12;
+
+    let rata;
+    if(t === 0){
+          // ✅ tasso zero → rata semplice
+          rata = m / a;
+         }else{
+          rata = m * (t/(1-Math.pow(1+t,-a)));
+         }
+
+    let marg = ent - usc - rata;
+// ✅ DETTAGLIO AGENZIA + IVA
+
+let agTot = num("agenzia");     // ORA è LORDO
+let ag = agTot / 1.22;          // ricavi il netto
+let agIVA = agTot - ag;
+
+
+let agNote = document.getElementById("agenziaNote");
+
+let baseAgenzia = "← Indica quota agenzia pattuita (Default = 3,5% prezzo concordato)";
+
+// ✅ NOTE AGENZIA SMART
+
+if(flagAgenzia.value === "no"){
+
+    if(costruttore.value === "si"){
+        agNote.innerHTML = baseAgenzia + "<br><span style='margin-left:13px; '>✅ Normalmente assente in acquisto da costruttore";
+    } else {
+        agNote.innerHTML = baseAgenzia + "<br>Nessuna provvigione agenzia";
+    }
+
+}
+else if(ag > 0){
+
+    let warning = "";
+
+    if(costruttore.value === "si"){
+        warning = "<br><span style='margin-left:13px;  color:red;'>⚠️ Stai pagando agenzia da costruttore → verifica se evitabile</span>";
+    }
+
+agNote.innerHTML =
+    baseAgenzia +
+    warning +
+    "<br><span style='margin-left:13px;'>Totale: " + eur(agTot) +
+    " (Netto " + eur(ag) + " + IVA " + eur(agIVA) + ")</span>";
+
+
+}
+else{
+
+    agNote.innerHTML = baseAgenzia;
+
+}
+
+
+// ===== COSTO TOTALE ACQUISTO =====
+
+let costo = (p - m)
+    + num("notaio1")
+    + num("notaio2")
+    + ((flagAgenzia.value==="no") ? 0 : num("agenzia"))
+    + num("perizia")
+    + num("istruttoria")
+    + num("assicurazione")
+          + num("allacciamento")
+          + num("speseCat")
+    + registroVal
+    + sostitutivaVal;
+
+    document.getElementById("rata").innerHTML = eur(rata);
+  
+// ✅ disponibilità e %
+let disp = ent - usc;
+let percVal = (disp > 0) ? (rata / disp) * 100 : 999;
+
+// ===== COLORAZIONE RATA + NOTE =====
+
+let rataEl = document.getElementById("rata");
+let rataNote = document.getElementById("rataNote");
+
+// reset classi
+rataEl.classList.remove("output-green","output-yellow","output-red");
+rataNote.classList.remove("output-green","output-yellow","output-red");
+
+// ✅ LOGICA
+
+if(marg < 0){
+
+    rataNote.innerHTML =
+        "❌ RATA NON SOSTENIBILE" +
+        "<br><span style='margin-left:13px;'>La rata supera la capacità mensile → rischio elevato</span>";
+
+    rataEl.classList.add("output-red");
+    rataNote.classList.add("output-red");
+
+}
+else if(percVal >= 35){
+
+let percTxt = percVal.toFixed(1).replace(".",",");
+
+    rataNote.innerHTML =
+        "⚠️ RATA AL LIMITE" +
+        "<br><span style='margin-left:13px;'>Rapporto rata/disponibilità " 
+        + percTxt + "% → oltre soglia bancaria (35%)</span>";
+
+
+    rataEl.classList.add("output-yellow");
+    rataNote.classList.add("output-yellow");
+
+}
+else{
+
+    rataNote.innerHTML =
+        "✅ RATA SOSTENIBILE (" 
+        + percVal.toFixed(1).replace(".",",") + "%)" +
+        "<br><span style='margin-left:13px;'>Livello compatibile con criteri bancari</span>";
+
+    rataEl.classList.add("output-green");
+    rataNote.classList.add("output-green");
+
+}
+
+let etaFine = eta + anniMutuo;
+
+let anniNote = document.getElementById("anniNote");
+
+// reset
+anniNote.innerHTML = "";
+
+// soglia bancaria
+let baseNote = "← Indica durata mutuo (anni). Default = 20, Max = 30";
+
+if(etaFine > 75){
+
+    anniNote.innerHTML =
+        baseNote +
+        "<br><span style='margin-left:13px; color:red;'>❌ Oltre 75 anni a fine mutuo → concessione molto improbabile</span>";
+
+}
+else if(etaFine > 70){
+
+    anniNote.innerHTML =
+        baseNote +
+        "<br><span style='margin-left:13px; color:orange;'>⚠️ Età elevata a fine mutuo → banca più severa</span>";
+
+}
+else{
+
+    anniNote.innerHTML = baseNote;
+}
+    margine.innerHTML = eur(marg);
+
+let diff = num("liquidita") - costo;
+
+
+// ===== FATTIBILITA ALL'ATTO (LOGICA AVANZATA) =====
+
+let fattEl = document.getElementById("fatt");
+let fattNote = fattEl.nextElementSibling;
+
+// reset classi
+fattEl.classList.remove("output-green","output-yellow","output-red");
+fattNote.classList.remove("output-green","output-yellow","output-red");
+
+// ✅ CASO 1: NON FATTIBILE
+if(diff < 0){
+
+    fattEl.innerHTML = "❌ NON FATTIBILE";
+
+    fattNote.innerHTML =
+        "❌ Ti mancano " 
+        + eur(Math.abs(diff)) + " per completare l'acquisto</span>";
+
+    fattEl.classList.add("output-red");
+    fattNote.classList.add("output-red");
+
+}
+
+// ✅ CASO 2: FATTIBILE → controllo sostenibilità
+else{
+
+    // ✅ VERDE: tutto ok
+    if(marg >= 0 && percVal < 35){
+
+        fattEl.innerHTML = "✅ OK";
+
+        fattNote.innerHTML =
+            "✅ Puoi acquistare e sostenere il mutuo con il reddito attuale</span>";
+
+        fattEl.classList.add("output-green");
+        fattNote.classList.add("output-green");
+
+    }
+
+    // ✅ GIALLO: NON sostenibile
+    else if(marg < 0){
+
+        fattEl.innerHTML = "⚠️ ATTENZIONE";
+
+        fattNote.innerHTML =
+            "⚠️Puoi comprarla ma non potrai mantenere la rata con l'attuale reddito</span>";
+
+        fattEl.classList.add("output-yellow");
+        fattNote.classList.add("output-yellow");
+
+    }
+
+    // ✅ GIALLO: oltre soglia banca
+    else if(percVal >= 35){
+
+        let percTxt = percVal.toFixed(1).replace(".",",");
+
+        fattEl.innerHTML = "⚠️ ATTENZIONE";
+
+        fattNote.innerHTML =
+           "⚠️Rapporto rata/disponibilità " 
+            + percTxt + "% → oltre soglia bancaria (35%)</span>";
+
+        fattEl.classList.add("output-yellow");
+        fattNote.classList.add("output-yellow");
+
+    }
+
+}
+
+// ===== SOSTENIBILITA =====
+
+// cassa iniziale dopo acquisto + arredo
+let costoTotale = (p - m)
+    + num("notaio1")
+    + num("notaio2")
+     + ((flagAgenzia.value==="no") ? 0 : num("agenzia"))
+    + num("perizia")
+    + num("istruttoria")
+    + num("assicurazione")
+         + num("allacciamento")
+         + num("speseCat")
+    + registroVal
+    + sostitutivaVal
+    + num("arredo");
+
+let saldo = num("liquidita") - costoTotale;
+
+// simulazione 12 mesi
+let min1 = saldo;
+for(let i=0;i<12;i++){
+    saldo += ent - usc - rata;
+    if(saldo < min1) min1 = saldo;
+}
+
+// ===== SOSTENIBILITA DOPO 1 ANNO (LOGICA COMPLETA) =====
+
+let annoEl = document.getElementById("anno1");
+let annoNote = annoEl.nextElementSibling;
+
+// reset classi
+annoEl.classList.remove("output-green","output-yellow","output-red");
+annoNote.classList.remove("output-green","output-yellow","output-red");
+
+// 🔴 NON sostenibile
+if(min1 < 0){
+
+    annoEl.innerHTML = "❌ NON SOSTENIBILE";
+
+    annoNote.innerHTML =
+        "❌ Ti mancano " 
+        + eur(Math.abs(min1)) + " entro il primo anno</span>";
+
+    annoEl.classList.add("output-red");
+    annoNote.classList.add("output-red");
+
+}
+
+// ✅ Sostenibile → ma valutiamo qualità
+else{
+
+    // 🟡 NUOVO CASO: margine negativo (problema reddituale)
+    if(marg < 0){
+
+        annoEl.innerHTML = "⚠️ ATTENZIONE";
+
+        annoNote.innerHTML =
+            "<⚠️ Puoi comprare ma non potrai mantenere la rata con l'attuale reddito ancora a lungo</span>";
+
+        annoEl.classList.add("output-yellow");
+        annoNote.classList.add("output-yellow");
+
+    }
+
+    // 🟡 soglia banca
+    else if(percVal >= 35){
+
+        let percTxt = percVal.toFixed(1).replace(".",",");
+
+        annoEl.innerHTML = "⚠️ ATTENZIONE";
+
+        annoNote.innerHTML =
+            "⚠️ Rapporto rata/disponibilità " 
+            + percTxt + "% → oltre soglia bancaria (35%)</span>";
+
+        annoEl.classList.add("output-yellow");
+        annoNote.classList.add("output-yellow");
+
+    }
+
+    // 🟢 tutto ok
+    else{
+
+        annoEl.innerHTML = "✅ OK";
+
+        annoNote.innerHTML =
+            "✅ Equilibrio sostenibile anche nel primo anno</span>";
+
+        annoEl.classList.add("output-green");
+        annoNote.classList.add("output-green");
+
+    }
+
+}
+
+// ===== COMMENTO + COLORAZIONE MARGINE =====
+
+let margEl = document.getElementById("margine");
+let margNote = document.getElementById("mTxt");
+
+// reset classi
+margEl.classList.remove("output-green","output-yellow","output-red");
+margNote.classList.remove("output-green","output-yellow","output-red");
+
+if(marg < 0){
+
+    margNote.innerHTML = 
+        "❌ MARGINE MENSILE NEGATIVO (" + eur(marg) + ")" +
+        "<br><span style='margin-left:13px;'>La rata supera la capacità mensile → situazione NON sostenibile</span>";
+
+    margEl.classList.add("output-red");
+    margNote.classList.add("output-red");
+
+}
+else if(percVal >= 35){
+
+    margNote.innerHTML = 
+        "⚠️ MARGINE MENSILE LIMITATO (" + eur(marg) + ")" +
+        "<br><span style='margin-left:13px;'>Rapporto rata/disponibilità " 
+        + percVal.toFixed(1).replace(".",",") + "% → oltre soglia bancaria (35%)</span>";
+
+    margEl.classList.add("output-yellow");
+    margNote.classList.add("output-yellow");
+
+}
+else{
+
+    margNote.innerHTML = 
+        "✅ MARGINE MENSILE ADEGUATO (" + eur(marg) + ")" +
+        "<br><span style='margin-left:13px;'>Rapporto rata/disponibilità " 
+        + percVal.toFixed(1).replace(".",",") + "% → livello sostenibile</span>";
+
+    margEl.classList.add("output-green");
+    margNote.classList.add("output-green");
+
+}
+
+// ===== ESITO FINALE =====
+
+// ===== STATI PARZIALI =====
+let statoRata = (marg < 0) ? "red" : (percVal >= 35 ? "yellow" : "green");
+let statoMargine = (marg < 0) ? "red" : (marg < 300 ? "yellow" : "green");
+let statoFatt = (diff < 0) ? "red" : ((marg < 0 || percVal >= 35) ? "yellow" : "green");
+let statoAnno1 = (min1 < 0) ? "red" : ((marg < 0 || percVal >= 35) ? "yellow" : "green");
+
+// ===== STATO FINALE =====
+let statoFinale = "green";
+
+if(
+    statoRata === "red" ||
+    statoMargine === "red" ||
+    statoFatt === "red" ||
+    statoAnno1 === "red"
+){
+    statoFinale = "red";
+}
+else if(
+    statoRata === "yellow" ||
+    statoMargine === "yellow" ||
+    statoFatt === "yellow" ||
+    statoAnno1 === "yellow"
+){
+    statoFinale = "yellow";
+}
+
+// ===== SEMAFORO =====
+document.getElementById("semRed").className = "lamp";
+document.getElementById("semYellow").className = "lamp";
+document.getElementById("semGreen").className = "lamp";
+
+if(statoFinale === "red"){
+    document.getElementById("semRed").classList.add("red","active");
+}
+else if(statoFinale === "yellow"){
+    document.getElementById("semYellow").classList.add("yellow","active");
+}
+else{
+    document.getElementById("semGreen").classList.add("green","active");
+}
+
+// ===== ESITI =====
+esito1.className = "";
+esito2.className = "";
+esito2.style.display = "block";
+
+// 🔴 ROSSO
+if(statoFinale === "red"){
+
+    esito1.innerHTML = "❌ ESITO: ACQUISTO NON CONSIGLIATO";
+    esito2.innerHTML = "";
+
+    // ✅ 1. PROBLEMA: NON ARRIVI ALL'ATTO
+    if(diff < 0){
+
+        esito2.innerHTML +=
+      "<div class='note-indent'>Liquidità insufficiente: ti mancano " 
+          + eur(Math.abs(diff)) + " per completare l'acquisto</div>";
+
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Abbassa il prezzo della casa</div>";
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Aumenta la disponibilità iniziale</div>";
+    }
+
+    // ✅ 2. PROBLEMA: RATA NON SOSTENIBILE
+    if(marg < 0){
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>Rata non sostenibile con il reddito attuale</div>";
+
+        if(anniMutuo < 30){
+            esito2.innerHTML +=
+                "<div class='note-indent'>➤ Valuta una durata mutuo più lunga per ridurre la rata</div>";
+        }
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Riduci importo mutuo o prezzo immobile</div>";
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Migliora equilibrio entrate/uscite mensili</div>";
+    }
+
+    // ✅ 3. PROBLEMA: NON REGGI 1° ANNO (POST ACQUISTO)
+    if(min1 < 0){
+
+        esito2.innerHTML +=
+         "<div class='note-indent'>Sostenibilità critica: ti mancano " 
+         + eur(Math.abs(min1)) + " entro il primo anno dall'acquisto</div>";
+
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Rafforza la liquidità residua dopo l'acquisto</div>";
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Riduci spese accessorie o arredamento</div>";
+
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Migliora il margine mensile (entrate/uscite)</div>";
+    }
+
+    esito1.classList.add("red");
+}
+// 🟡 GIALLO
+else if(statoFinale === "yellow"){
+
+    esito1.innerHTML = "⚠️ ESITO: ACQUISTO POSSIBILE CON ATTENZIONE";
+    esito2.innerHTML = "";
+
+    if(marg < 0){
+        esito2.innerHTML +=
+            "<div class='note-indent'>Non potrai mantenere la rata con l'attuale reddito</div>";
+    }
+
+    if(percVal >= 35){
+        esito2.innerHTML +=
+            "<div class='note-indent'>Rapporto rata/disponibilità oltre soglia bancaria (35%)</div>";
+    }
+
+    // ✅ suggerimenti
+    esito2.innerHTML +=
+        "<div class='note-indent'>➤ Riduci importo mutuo o prezzo immobile</div>";
+
+    if(anniMutuo < 30){
+        esito2.innerHTML +=
+            "<div class='note-indent'>➤ Prova ad allungare la durata del mutuo</div>";
+    }
+
+    esito2.innerHTML +=
+        "<div class='note-indent'>➤ Aumenta anticipo iniziale</div>";
+
+    esito2.innerHTML +=
+        "<div class='note-indent'>➤ Migliora equilibrio entrate/uscite mensili</div>";
+
+    esito1.classList.add("yellow");
+}
+
+// 🟢 VERDE
+else{
+
+    esito1.innerHTML = "✅ ESITO: ACQUISTO CONSIGLIATO";
+
+    esito2.innerHTML =
+        "<div class='note-indent'>Tutti i parametri risultano sostenibili all'acquisto e nel tempo</div>";
+
+    esito1.classList.add("green");
+}
+}
+
+
+// ===== EVENTI LIVE =====
+document.querySelectorAll("input,select").forEach(el=>{
+    el.addEventListener("input", calcola);
+});
+
+
+tasso.addEventListener("focus", function(){
+    this.dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown'}));
+});
+
+document.getElementById("rendita").addEventListener("input", calcola);
+document.querySelectorAll("input").forEach(el=>{
+    el.addEventListener("blur", function(){
+
+        if(
+            this.id === "tasso" ||
+            this.id === "eta" ||   // ✅ ESCLUSO
+            this.readOnly
+        ) return;
+
+        formattaInput(this);
+
+    });
+});
+``
+
+percMutuo.addEventListener("change", function(){
+
+    let p = num("prezzo");
+    let perc = Number(this.value);
+
+    if(!perc) return;
+
+    let nuovoMutuo = p * perc;
+
+    // ✅ QUI IL FIX
+    mutuo.value = nuovoMutuo.toString();   // numero pulito
+
+    overrideMutuo = true;
+
+    formattaInput(mutuo);   // poi format
+
+    calcola();
+});
+
+percAgenzia.addEventListener("change", function(){
+
+    let p = num("prezzo");
+    let perc = Number(this.value);
+
+    if(!perc) return;
+
+  let valore = p * perc * 1.22;
+
+    agenzia.value = valore;
+
+    overrideAgenzia = true;
+
+    formattaInput(agenzia);
+
+    calcola();
+});
+
+
+tasso.addEventListener("blur", function(){
+
+    let valore = this.value
+        .replace("%","")
+        .replace(",",".")
+        .trim();
+
+    if(valore === "" || isNaN(valore)) return;
+
+    this.value = Number(valore).toString().replace(".",",") + "%";
+});
+
+document.querySelectorAll("input").forEach((el, index, arr)=>{
+    el.addEventListener("keydown", function(e){
+
+        if(e.key === "Enter"){
+            e.preventDefault();
+
+            calcola();
+
+            let next = arr[index + 1];
+            if(next){
+                next.focus();
+            }
+        }
+    });
+});
+
+// ===== INIT =====
+window.onload = function(){
+
+let tassoEl = document.getElementById("tasso");
+
+if(!tassoEl.value){
+    tassoEl.value = "3,5%";
+}
+
+
+// ✅ FORMATTA TUTTI INPUT DOPO AUTO
+document.querySelectorAll("input").forEach(el=>{
+   if(
+    el.id !== "tasso" &&
+    el.id !== "eta" &&   // ✅ ESCLUDI ETA
+    !el.readOnly
+){
+        formattaInput(el);
+    }
+});
+
+auto();
+
+// ✅ forza calcolo catastale SUBITO
+calcolaCatastale();
+
+// ✅ poi tutto il resto
+calcola();
+
+
+
+// ✅ FORMATTA TUTTO DOPO CALCOLO
+document.querySelectorAll("input").forEach(el=>{
+  if(
+    el.id !== "tasso" &&
+    el.id !== "eta" &&   // ✅ ESCLUDI ETA
+    !el.readOnly
+){
+        formattaInput(el);
+    }
+});
+
+
+}
+
+// ===== EXTRA =====
+function resetAuto(){
+
+    // ✅ RESET FLAG
+    overrideCat = false;
+    overrideArredo = false;
+    overrideMutuo = false;
+    overrideNotaio1 = false;
+    overrideNotaio2 = false;
+    overrideAgenzia = false;
+    overridePerizia = false;
+    overrideIstruttoria = false;
+    overrideAssicurazione = false;
+
+          // ✅ RESET PREZZO CASA
+        
+	
+
+    // ✅ RESET SELECT MUTUO
+    document.getElementById("percMutuo").value = "0.8";
+	document.getElementById("percAgenzia").value = "0.035"
+
+    // ✅ RIPRISTINA DEFAULT MANUALI
+
+	notaio1.value = eur(num("prezzo") * 0.02);
+    	notaio2.value = eur(num("mutuo") * 0.02);
+
+    	perizia.value = 500;
+	formattaInput(perizia);
+
+    	istruttoria.value = 500;
+	formattaInput(istruttoria);
+    
+	assicurazione.value = 1000;
+	formattaInput(assicurazione);
+
+        allacciamento.value = 150;
+        formattaInput(allacciamento);
+	
+        speseCat.value = 758;
+        formattaInput(speseCat);
+
+    // 🔥 STEP CRUCIALE: FORZA UPDATE ASINCRONO
+    setTimeout(() => {
+
+        auto();
+        calcola();
+
+        formattaTutti();
+
+    }, 0);
+}
+
+function resetPrezzo(){
+    document.getElementById("prezzo").value = 120000;
+    overrideMutuo = false;
+    formattaInput(document.getElementById("prezzo"));
+    calcola();
+}
+
+function resetMutuo(){
+    overrideMutuo = false;
+
+    document.getElementById("percMutuo").value = "0.8";   // ✅ FIX
+
+    calcola();
+}
+
+function resetLiquidita(){
+    let el = document.getElementById("liquidita");
+    el.value = 35000;
+    formattaInput(el);
+    calcola();
+}
+
+function resetEntrate(){
+    let el = document.getElementById("entrate");
+    el.value = 3500;
+    formattaInput(el);
+    calcola();
+}
+
+function resetUscite(){
+    let el = document.getElementById("uscite");
+    el.value = 2800;
+    formattaInput(el);
+    calcola();
+}
+
+function resetCatastale(){
+    overrideCat = false;
+    calcola();
+}
+
+function resetTasso(){
+    let el = document.getElementById("tasso");
+    el.value = "3,5%";
+    // ✅ forza formato corretto subito
+    el.dispatchEvent(new Event("blur"));
+    calcola();
+}
+
+function resetPerizia(){
+    let el = document.getElementById("perizia");
+    el.value = 500;
+    formattaInput(el);
+    calcola();
+}
+
+function resetIstruttoria(){
+    let el = document.getElementById("istruttoria");
+    el.value = 500;
+    formattaInput(el);
+    calcola();
+}
+
+function resetNotaio1(){
+    overrideNotaio1 = false;
+    calcola();
+}
+
+function resetSpeseCat(){
+    overrideSpeseCat = false;
+    calcola();
+}
+
+function resetNotaio2(){
+    overrideNotaio2 = false;
+    calcola();
+}
+
+function resetAssicurazione(){
+    let el = document.getElementById("assicurazione");
+    el.value = 1000;
+    formattaInput(el);
+    calcola();
+}
+
+function resetAgenzia(){
+    overrideAgenzia = false;
+    document.getElementById("percAgenzia").value = "0.035";   // ✅ reset %
+    calcola();
+}
+
+function resetArredo(){
+    overrideArredo = false;
+    calcola();
+}
+
+function resetAllacciamento(){
+    overrideAllacciamento = false;
+    calcola();
+}
+
+function resetRendita(){
+    let el = document.getElementById("rendita");
+    overrideRendita = false;   // ✅ fondamentale
+    calcola();
+}
+
+
+function calcolaCatastale(){
+    let raw = document.getElementById("rendita").value;
+    let rendita = Number(
+        raw
+        .replace(/\./g,"")
+        .replace("€","")  
+        .replace(",",".")
+        .trim()
+    );
+    if(!rendita || isNaN(rendita)){
+        document.getElementById("catastale").value = "";
+        return;
+    }
+    let valore = rendita * 1.05 * 110;
+    document.getElementById("catastale").value = eur(valore);
+}
+
+function scaricaPDF(){
+
+    let nome = prompt("Nome cliente:", "Cliente");
+    if(!nome) nome="Cliente";
+
+    let oggi = new Date();
+    let data = oggi.toLocaleDateString("it-IT");
+
+    // header
+    document.getElementById("cliente-nome").innerHTML = "Cliente: " + nome;
+    document.getElementById("data-simulazione").innerHTML = "Data: " + data;
+
+    let element = document.querySelector(".container");
+
+    let opt = {
+        margin:       5,
+        filename:     "Simulazione_" + nome + "_" + data.replace(/\//g,"-") + ".pdf",
+        image:        { type: 'jpeg', quality: 0.98 },
+        html2canvas:  { scale: 2 },
+        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+}
+
+function contattami(){
+
+let nome = document.getElementById("nome").value;
+let cognome = document.getElementById("cognome").value;
+let telefono = document.getElementById("telefono").value;
+let emailContatto = document.getElementById("emailContatto").value;
+
+let testo =
+`Richiesta consulenza simulatore casa
+
+--- DATI CLIENTE ---
+Nome: ${nome}
+Cognome: ${cognome}
+Telefono: ${telefono}
+Email: ${emailContatto}
+
+--- DATI SIMULAZIONE ---
+Prezzo immobile: ${prezzo} €
+Mutuo richiesto: ${mutuo} €
+Durata mutuo: ${anni} anni
+Entrate mensili: ${entrate} €
+Uscite mensili: ${uscite} €`;;
+
+    let mail = "mailto:f_bellino@libero.it"
+        + "?subject=Richiesta Consulenza Simulatore Casa"
+        + "&body=" + encodeURIComponent(testo);
+
+    window.location.href = mail;
+}
+
+</script>
+
+</body>
+</html>
