@@ -213,6 +213,12 @@ color:white;
 
 @media print {
 
+
+* {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
     body{
         background:white;
         zoom: 80%;
@@ -1729,54 +1735,69 @@ document.querySelectorAll("input").forEach(el=>{
 // ===== EXTRA =====
 function resetAuto(){
 
-    // ✅ RESET FLAG
+    // ✅ VALORI DEFAULT COMPLETI
+    prezzo.value = 120000;
+    rendita.value = 800;
+    mutuo.value = 96000;
+
+    anni.value = 20;
+    tasso.value = "3,5%";
+    eta.value = 45;
+
+    liquidita.value = 35000;
+    entrate.value = 3500;
+    uscite.value = 2800;
+
+    perizia.value = 500;
+    istruttoria.value = 500;
+    assicurazione.value = 1000;
+
+    allacciamento.value = 150;
+    speseCat.value = 758;
+
+    percMutuo.value = "0.8";
+    percAgenzia.value = "0.035";
+
+    primacasa.value = "si";
+    costruttore.value = "no";
+    flagAgenzia.value = "si";
+
+    // ✅ RESET FLAG (mantieni i tuoi nomi!)
     overrideCat = false;
     overrideArredo = false;
     overrideMutuo = false;
     overrideNotaio1 = false;
     overrideNotaio2 = false;
     overrideAgenzia = false;
-    overridePerizia = false;
-    overrideIstruttoria = false;
-    overrideAssicurazione = false;
+    overrideAllacciamento = false;
+    overrideSpeseCat = false;
+    overrideRendita = false;
 
-          // ✅ RESET PREZZO CASA
-        
-	
+    // ✅ RESET OUTPUT
+    esito1.innerHTML = "";
+    esito2.innerHTML = "";
+    rata.innerHTML = "";
+    margine.innerHTML = "";
+    fatt.innerHTML = "";
+    anno1.innerHTML = "";
 
-    // ✅ RESET SELECT MUTUO
-    document.getElementById("percMutuo").value = "0.8";
-	document.getElementById("percAgenzia").value = "0.035"
+    // ✅ RESET SEMAFORO
+    semRed.className = "lamp";
+    semYellow.className = "lamp";
+    semGreen.className = "lamp";
 
-    // ✅ RIPRISTINA DEFAULT MANUALI
+    // ✅ FORMATTA INPUT
+    document.querySelectorAll("input").forEach(el => {
+        if(el.id !== "tasso" && el.id !== "eta" && !el.readOnly){
+            formattaInput(el);
+        }
+    });
 
-	notaio1.value = eur(num("prezzo") * 0.02);
-    	notaio2.value = eur(num("mutuo") * 0.02);
-
-    	perizia.value = 500;
-	formattaInput(perizia);
-
-    	istruttoria.value = 500;
-	formattaInput(istruttoria);
-    
-	assicurazione.value = 1000;
-	formattaInput(assicurazione);
-
-        allacciamento.value = 150;
-        formattaInput(allacciamento);
-	
-        speseCat.value = 758;
-        formattaInput(speseCat);
-
-    // 🔥 STEP CRUCIALE: FORZA UPDATE ASINCRONO
+    // ✅ RICALCOLO PULITO
     setTimeout(() => {
-
         auto();
         calcola();
-
-        formattaTutti();
-
-    }, 0);
+    }, 50);
 }
 
 function resetPrezzo(){
@@ -1912,21 +1933,11 @@ function scaricaPDF(){
     let oggi = new Date();
     let data = oggi.toLocaleDateString("it-IT");
 
-    // header
     document.getElementById("cliente-nome").innerHTML = "Cliente: " + nome;
     document.getElementById("data-simulazione").innerHTML = "Data: " + data;
 
-    let element = document.querySelector(".container");
-
-    let opt = {
-        margin:       5,
-        filename:     "Simulazione_" + nome + "_" + data.replace(/\//g,"-") + ".pdf",
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-    };
-
-    html2pdf().set(opt).from(element).save();
+    // 🔥 stampa standard browser
+    window.print();
 }
 
 function contattami(){
